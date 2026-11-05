@@ -1,0 +1,16 @@
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Maven
+target/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales de guardado de los CSV
+*.tmp
+
+# OJO: la carpeta data/ SÍ se sube a GitHub (no agregarla aquí)
