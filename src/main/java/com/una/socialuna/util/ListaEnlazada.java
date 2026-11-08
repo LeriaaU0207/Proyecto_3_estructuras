@@ -45,7 +45,7 @@ public class ListaEnlazada<T> implements Iterable<T> {
         Nodo<T> nuevo = new Nodo<>(elemento);
         nuevo.siguiente = cabeza;
         cabeza = nuevo;
-        if (cola != null) {
+        if (cola == null) {
             cola = nuevo;
         }
         tamano++;
@@ -75,7 +75,7 @@ public class ListaEnlazada<T> implements Iterable<T> {
      */
     public Optional<T> buscar(Predicate<? super T> condicion) {
         Nodo<T> actual = cabeza;
-        while (actual.siguiente != null) {
+        while (actual != null) {
             if (condicion.test(actual.dato)) {
                 return Optional.of(actual.dato);
             }
