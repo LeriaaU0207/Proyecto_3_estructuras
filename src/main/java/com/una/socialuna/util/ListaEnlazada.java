@@ -45,7 +45,7 @@ public class ListaEnlazada<T> implements Iterable<T> {
         Nodo<T> nuevo = new Nodo<>(elemento);
         nuevo.siguiente = cabeza;
         cabeza = nuevo;
-        if (cola != null) {
+        if (cola == null) {
             cola = nuevo;
         }
         tamano++;
