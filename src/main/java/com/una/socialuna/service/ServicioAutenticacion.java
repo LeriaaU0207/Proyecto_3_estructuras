@@ -33,9 +33,11 @@ public class ServicioAutenticacion {
                 HashUtil.hashear(contrasena));
 
         gestor.getUsuarios().agregar(nuevo);
+        gestor.getGrafo().agregarVertice(nuevo.getId());
         try {
             gestor.guardarUsuarios();
         } catch (RuntimeException e) {
+            gestor.getGrafo().eliminarVertice(nuevo.getId());
             gestor.getUsuarios().eliminar(nuevo);
             throw e;
         }
