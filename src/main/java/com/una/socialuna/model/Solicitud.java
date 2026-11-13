@@ -1,28 +1,20 @@
 package com.una.socialuna.model;
 
 import java.time.LocalDateTime;
-
-/**
- * ==== ARCHIVO TEMPORAL (de Leria, para que compile la persistencia) ====
- * Anthony: reemplázalo por tu versión final, manteniendo estos campos y
- * getters (los usa RepositorioSolicitudes). Al reemplazarlo, borra este
- * comentario.
- * Solicitud de amistad PENDIENTE. Al aceptarse pasa a ser una amistad en el
- * grafo; al rechazarse se elimina. Por eso en solicitudes.csv solo hay
- * pendientes.
- */
+import java.util.Objects;
 
 public class Solicitud {
+
     private final int idEmisor;
     private final int idReceptor;
     private final LocalDateTime fechaHora;
 
-    // Recibe id de quien envia, id quien recibe y la fecha de envio
     public Solicitud(int idEmisor, int idReceptor, LocalDateTime fechaHora) {
         this.idEmisor = idEmisor;
         this.idReceptor = idReceptor;
-        this.fechaHora = fechaHora;
+        this.fechaHora = Objects.requireNonNull(fechaHora, "La fecha de la solicitud no puede ser null.");
     }
+
     public int getIdEmisor() {
         return idEmisor;
     }
@@ -39,5 +31,4 @@ public class Solicitud {
     public String toString() {
         return "Solicitud " + idEmisor + " -> " + idReceptor + " (" + fechaHora + ")";
     }
-
 }
