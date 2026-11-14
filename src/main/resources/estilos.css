@@ -1,0 +1,111 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-base: #f6f8fb;
+    -fx-background: #edf3f7;
+    -fx-accent: #087f8c;
+    -fx-focus-color: #087f8c;
+    -fx-faint-focus-color: #087f8c22;
+}
+
+.label {
+    -fx-text-fill: #1c3044;
+}
+
+.titulo {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.autor {
+    -fx-font-weight: bold;
+}
+
+.secundario {
+    -fx-text-fill: #586a7d;
+    -fx-font-size: 12px;
+}
+
+.tarjeta {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-padding: 26;
+    -fx-effect: dropshadow(gaussian, #183b5618, 18, 0, 0, 5);
+}
+
+.button {
+    -fx-background-color: #e0eaf0;
+    -fx-text-fill: #18354b;
+    -fx-background-radius: 8;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #cedee8;
+}
+
+.button:focused {
+    -fx-effect: dropshadow(gaussian, #087f8c66, 5, 0, 0, 0);
+}
+
+.button.primario {
+    -fx-background-color: #087f8c;
+    -fx-text-fill: white;
+}
+
+.button.primario:hover {
+    -fx-background-color: #066773;
+}
+
+.button.peligro {
+    -fx-background-color: #fce6e6;
+    -fx-text-fill: #a52232;
+}
+
+.button.peligro:hover {
+    -fx-background-color: #f6cece;
+}
+
+.text-field, .text-area {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #c5d3de;
+    -fx-background-color: white;
+    -fx-text-fill: #1c3044;
+    -fx-prompt-text-fill: #617487;
+    -fx-padding: 9;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #087f8c;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 6;
+}
+
+.list-cell {
+    -fx-padding: 8;
+    -fx-background-color: white;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #e0f0f2;
+}
+
+.publicacion {
+    -fx-padding: 12;
+    -fx-background-color: #f4f8fb;
+    -fx-background-radius: 10;
+}

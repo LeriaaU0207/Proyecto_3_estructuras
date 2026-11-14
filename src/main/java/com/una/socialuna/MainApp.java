@@ -49,24 +49,24 @@ public class MainApp extends Application {
             return;
         }
 
-        // ===== INICIO BLOQUE TEMPORAL (Boris: reemplazar por NavegadorEscenas) =====
-        Label titulo = new Label("Social UNA");
-        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-        Label resumen = new Label(textoResumen());
-        Button botonGuardar = new Button("Guardar ahora");
-        botonGuardar.setOnAction(evento -> {
-            gestor.guardarTodo();
-            resumen.setText(textoResumen() + "\n(guardado)");
-        });
-        Label aviso = new Label("Pantalla temporal: la persistencia está cargada y lista.");
+        var usuarios = new com.una.socialuna.service.ServicioUsuarios(gestor);
 
-        VBox raiz = new VBox(12, titulo, resumen, botonGuardar, aviso);
-        raiz.setAlignment(Pos.CENTER);
-        raiz.setPadding(new Insets(24));
-        escenario.setTitle("Social UNA");
-        escenario.setScene(new Scene(raiz, 460, 260));
-        escenario.show();
-        // ===== FIN BLOQUE TEMPORAL =====
+        var autenticacion =
+                new com.una.socialuna.service.ServicioAutenticacion(gestor, usuarios);
+
+        var amistades =
+                new com.una.socialuna.service.ServicioAmistades(gestor, usuarios);
+
+        var publicaciones =
+                new com.una.socialuna.service.ServicioPublicaciones(gestor);
+
+        var sesion = new com.una.socialuna.service.SesionActual();
+
+        var navegador = new com.una.socialuna.view.NavegadorEscenas(
+                escenario, autenticacion, usuarios, amistades, publicaciones, sesion);
+
+        navegador.iniciar();
+
     }
 
     private String textoResumen() {
