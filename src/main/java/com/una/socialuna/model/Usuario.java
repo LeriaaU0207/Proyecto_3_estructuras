@@ -1,10 +1,7 @@
 package com.una.socialuna.model;
 
 /**
- * ARCHIVO TEMPORAL PARA PODER COMPILAR LA PERSISTENCIA
- * Boris y Tony pueden reemplazarlo con su version final. Hay que mantener
- * los setters y getters.
- * Este representa a un estudiante registrado en la red social
+ * Representa a un estudiante registrado en la red social.
  */
 public class Usuario {
 

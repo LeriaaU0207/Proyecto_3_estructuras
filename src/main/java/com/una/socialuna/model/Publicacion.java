@@ -1,12 +1,8 @@
 package com.una.socialuna.model;
 
 import java.time.LocalDateTime;
+
 /**
- * ==== ARCHIVO TEMPORAL (de Leria, para que compile la persistencia) ====
- * Anthony/Boris: pueden reemplazarlo por su versión final. Solo mantengan
- * estos campos y getters, porque los usa RepositorioPublicaciones
- * (publicaciones.csv) y ServicioPublicaciones. Al reemplazarlo, borren este
- * comentario.
  * Representa un mensaje publicado por un usuario en el muro.
  */
 

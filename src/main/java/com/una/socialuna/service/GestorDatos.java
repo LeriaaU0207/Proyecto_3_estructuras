@@ -4,12 +4,15 @@ import com.una.socialuna.model.GrafoAmistades;
 import com.una.socialuna.model.Publicacion;
 import com.una.socialuna.model.Solicitud;
 import com.una.socialuna.model.Usuario;
+import com.una.socialuna.util.CsvUtil;
 import com.una.socialuna.util.ListaEnlazada;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Punto central de la persistencia. Es DUEÑO de las estructuras de datos en
@@ -34,6 +37,7 @@ public class GestorDatos {
         void ejecutar() throws IOException;
     }
 
+    private final Path carpetaDatos;
     private final RepositorioUsuarios repoUsuarios;
     private final RepositorioAmistades repoAmistades;
     private final RepositorioSolicitudes repoSolicitudes;
@@ -59,6 +63,7 @@ public class GestorDatos {
      * Recibe: la carpeta donde están (o se crearán) los archivos CSV.
      */
     public GestorDatos(Path carpetaDatos) {
+        this.carpetaDatos = carpetaDatos;
         this.repoUsuarios = new RepositorioUsuarios(carpetaDatos.resolve("usuarios.csv"));
         this.repoAmistades = new RepositorioAmistades(carpetaDatos.resolve("amistades.csv"));
         this.repoSolicitudes = new RepositorioSolicitudes(carpetaDatos.resolve("solicitudes.csv"));
@@ -71,10 +76,15 @@ public class GestorDatos {
      * (amistades, solicitudes o publicaciones de usuarios que ya no existen).
      * También calcula los próximos ids (máximo + 1).
      *
+     * Si data/ está vacía y existe la carpeta datos_ejemplo/ al lado, primero
+     * copia los datos de ejemplo (auto-seed).
+     *
      * @throws UncheckedIOException si algún archivo no se puede leer o está dañado
      */
     public void cargarTodo() {
         try {
+            sembrarDatosDeEjemplo();
+
             usuarios = repoUsuarios.cargar();
 
             grafo = new GrafoAmistades();
@@ -124,6 +134,32 @@ public class GestorDatos {
         if (!repoPublicaciones.existe()) {
             guardarPublicaciones();
         }
+    }
+
+    /**
+     * Si data/ todavía no tiene usuarios y al lado existe la carpeta
+     * datos_ejemplo/, copia los cuatro CSV de ejemplo. Así una instalación
+     * nueva arranca con datos para la demostración y, a partir de ahí, la app
+     * trabaja y guarda siempre sobre data/.
+     */
+    private void sembrarDatosDeEjemplo() throws IOException {
+        Path carpetaEjemplo = carpetaDatos.resolveSibling("datos_ejemplo");
+        if (!Files.isDirectory(carpetaEjemplo) || !carpetaDatosVacia()) {
+            return;
+        }
+        Files.createDirectories(carpetaDatos);
+        for (String nombre : new String[]{
+                "usuarios.csv", "amistades.csv", "solicitudes.csv", "publicaciones.csv"}) {
+            Path origen = carpetaEjemplo.resolve(nombre);
+            if (Files.exists(origen)) {
+                Files.copy(origen, carpetaDatos.resolve(nombre),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+    }
+
+    private boolean carpetaDatosVacia() throws IOException {
+        return CsvUtil.leerRegistros(carpetaDatos.resolve("usuarios.csv")).tamano() == 0;
     }
 
     private boolean existeUsuario(int id) {

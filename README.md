@@ -162,9 +162,27 @@ mvn javafx:run
 mvn clean package
 ```
 
-El `.jar` queda en `target/` y se ejecuta desde una carpeta que tenga la carpeta `data/` al lado.
+El `.jar` queda en `target/social-una-1.0.0.jar` y se ejecuta así:
 
-> **Nota:** la carpeta `data/` hoy solo tiene los encabezados de los CSV. Para probar hay que registrar usuarios desde la app o esperar los datos de ejemplo del equipo.
+```bash
+java -jar target/social-una-1.0.0.jar
+```
+
+El `.jar` debe estar en una carpeta que tenga `data/` y `datos_ejemplo/` al lado. Ya lo probé en una carpeta distinta a la del proyecto y arranca sin errores.
+
+### Usuarios de ejemplo
+
+La primera vez que se abre la app, si `data/` está vacía, se copian automáticamente los datos de `datos_ejemplo/`. Se puede entrar con:
+
+| Usuario | Contraseña | Amigos |
+|---|---|---|
+| `ana` | `demo1234` | luis |
+| `luis` | `demo1234` | ana, sofia |
+| `sofia` | `demo1234` | luis |
+
+Sofía tiene además una solicitud de amistad pendiente para Ana, para poder mostrar el flujo de aceptar/rechazar.
+
+> `demo1234` es solo para los datos de ejemplo. Las contraseñas reales se guardan con **SHA-256 + salt** usando `HashUtil`; el CSV nunca guarda la contraseña en texto plano.
 
 ---
 
@@ -177,11 +195,17 @@ El `.jar` queda en `target/` y se ejecuta desde una carpeta que tenga la carpeta
 - Vistas de búsqueda, amigos y solicitudes.
 - Pruebas de lógica, feed y persistencia.
 
-**Pendiente del equipo (no es mío):**
+**Terminado por el equipo:**
 
-- `ContextoApp` — Leria.
-- `NavegadorEscenas`, `LoginVista`, `RegistroVista`, `PrincipalVista`, `MuroVista`, `AlertaUtil`, `Validador`, `CampoContrasena`, `estilos.css` — Boris.
-- `datos_ejemplo/` con el auto-seed, `README` del equipo, `.jar` probado y UML — Leria y Boris.
+- Persistencia, repositorios CSV, publicaciones y feed — Leria.
+- `ContextoApp`, `datos_ejemplo/` y auto-seed — Leria.
+- `NavegadorEscenas`, `LoginVista`, `RegistroVista`, `PrincipalVista`, `MuroVista`, `AlertaUtil`, `Validador`, `CampoContrasena` y `estilos.css` — Boris.
+- `.jar` generado y probado en una carpeta aparte.
+
+**Pendiente del equipo:**
+
+- UML o manual técnico básico.
+- Hoja de defensa con quién hizo qué y cómo funciona cada módulo.
 
 ---
 
