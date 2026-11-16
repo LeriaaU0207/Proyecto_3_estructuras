@@ -236,4 +236,14 @@ Sofía tiene además una solicitud de amistad pendiente para Ana, para poder mos
 
 ---
 
+## 13. READMEs del equipo
+
+- [README de Anthony](README.md)
+- [README de Boris](README-Boris.md)
+- [README de Leria](README-Leria.md)
+- [Manual técnico](docs/manual-tecnico.md)
+- [Hoja de defensa](docs/hoja-de-defensa.md)
+
+---
+
 *Anthony · Social UNA · Proyecto Programación III · 2026*
