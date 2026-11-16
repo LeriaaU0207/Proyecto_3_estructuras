@@ -1,5 +1,11 @@
 id,idAutor,fechaHora,contenido,editada
-1,1,2026-11-14T00:09:45.739585500,"Buenas tardes :D/
-recomienden sagas de pelis para maratonear ^^",true
-2,2,2026-11-14T00:16:55.827643800,busquen brete,false
-3,3,2026-11-14T01:06:10.523530900,Scooba scooba scoob schoob scooba,false
+1,1,2026-11-01T09:00,Hola a todos. Arrancamos el proyecto de Estructuras de Datos.,false
+2,2,2026-11-01T09:30,Buen día. ¿Ya revisaron la guía del proyecto?,false
+3,3,2026-11-01T10:00,Sí ya la leí. Mañana empezamos con la persistencia.,false
+4,1,2026-11-01T11:15,Yo me encargo de la autenticación y las amistades.,false
+5,2,2026-11-01T12:00,Yo hago el muro y la navegación. Cualquier cosa avisan.,false
+6,3,2026-11-01T13:30,"Listo, quedamos así entonces.",true
+7,1,2026-11-01T18:45,Nos vemos en la defensa equipo.,false
+8,4,2026-11-16T15:32:45.849355100,"Holis! Estamos con el apartado de las pruebas finales, probando la robustez del sistema y la facilidad del manejo de la red social. Es bastante intuitiva :D
+Tengan una linda tarde todos",false
+9,5,2026-11-16T15:38:27.968835800,Hola!!,false
