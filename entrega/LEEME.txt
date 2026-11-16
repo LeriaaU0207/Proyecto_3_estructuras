@@ -1,0 +1,78 @@
+SOCIAL UNA - ENTREGA DEL PROYECTO
+=================================
+
+Proyecto Programación III - Noviembre 2026
+Red social de escritorio hecha con JavaFX y persistencia en CSV.
+
+CONTENIDO DE LA CARPETA
+-----------------------
+social-una-1.0.0.jar   Ejecutable del sistema (JavaFX incluido).
+data/                  Datos de trabajo: 3 usuarios de prueba y sus publicaciones.
+datos_ejemplo/         Copia de los datos iniciales para el auto-seed.
+documentos/            Instrucciones, archivos de datos y manual técnico con UML.
+src/, pom.xml          Código fuente Maven del proyecto (opcional, para revisión).
+README*.md, docs/      Documentación del repositorio.
+LEEME.txt              Este archivo.
+
+CÓMO EJECUTAR
+-------------
+1. Tener instalado JDK 24 o superior.
+2. Abrir una terminal en esta carpeta.
+3. Ejecutar:
+
+   java -jar social-una-1.0.0.jar
+
+También se puede abrir desde IntelliJ IDEA ejecutando:
+
+   com.una.socialuna.Launcher
+
+Importante: no ejecutar com.una.socialuna.MainApp directamente.
+MainApp extiende Application y puede fallar con:
+"JavaFX runtime components are missing".
+Launcher es el punto de entrada correcto.
+
+USUARIOS DE PRUEBA
+------------------
+Usuario   Contraseña   Nombre
+ana       demo1234     Ana Pérez
+luis      demo1234     Luis Mora
+sofia     demo1234     Sofía Rojas
+
+Amistades: Ana-Luis y Luis-Sofía.
+Solicitud pendiente: Sofía -> Ana.
+
+DATOS DE PRUEBA
+---------------
+- 3 usuarios registrados.
+- 7 publicaciones repartidas entre los 3 usuarios.
+- 2 amistades.
+- 1 solicitud de amistad pendiente.
+- 12 me gusta.
+- 6 comentarios, incluida 1 respuesta.
+
+ARCHIVOS CSV
+------------
+data/usuarios.csv        id,nombre,usuario,contrasenaHash
+data/amistades.csv       idUsuarioA,idUsuarioB
+data/solicitudes.csv     idEmisor,idReceptor,fecha
+data/publicaciones.csv   id,idAutor,fechaHora,contenido,editada
+data/comentarios.csv     id,idPublicacion,idAutor,fechaHora,contenido,idComentarioPadre
+data/me_gusta.csv        idPublicacion,idUsuario
+
+Las contraseñas no se guardan en texto plano: se guarda salt:hash.
+La contraseña demo1234 solo se conoce porque es un dato de prueba.
+
+SI LA APP ABRE SIN DATOS
+------------------------
+Cerrar la aplicación, copiar el contenido de datos_ejemplo/ dentro de data/
+y volver a abrirla. También se puede vaciar data/ y dejar que el auto-seed
+copie los 6 CSV automáticamente.
+
+DOCUMENTOS INCLUIDOS
+--------------------
+documentos/01_Instrucciones_de_ejecucion.docx
+documentos/02_Archivos_de_datos.docx
+documentos/03_Manual_tecnico_y_UML.docx
+documentos/diagrama_clases.png
+
+Social UNA - Proyecto Programación III
