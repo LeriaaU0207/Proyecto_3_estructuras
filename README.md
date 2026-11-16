@@ -10,11 +10,11 @@ Este README documenta **mi parte** del proyecto Social UNA, cómo la desarrollé
 
 ## 1. De qué trata el proyecto
 
-Social UNA es una red social de escritorio hecha con JavaFX. Permite registrarse, iniciar sesión, buscar usuarios, enviar y aceptar solicitudes de amistad, publicar en un muro y ver el feed de uno mismo y de sus amigos. Todo se guarda en archivos CSV, sin base de datos, y las estructuras principales (lista enlazada y grafo de amistades) están implementadas desde cero.
+Social UNA es una red social de escritorio hecha con JavaFX. Permite registrarse, iniciar sesión, buscar usuarios, enviar y aceptar solicitudes de amistad, publicar en un muro, ver el feed de uno mismo y de sus amigos, dar “me gusta”, comentar y responder comentarios. Todo se guarda en archivos CSV, sin base de datos, y las estructuras principales (lista enlazada y grafo de amistades) están implementadas desde cero.
 
 El flujo que se defiende es:
 
-> Registro → Login → Buscar usuario → Enviar solicitud → Aceptar → Ver amigo → Publicar → Ver feed propio + de amigos → Cerrar la app → Reabrir → Todo sigue igual.
+> Registro → Login → Buscar usuario → Enviar solicitud → Aceptar → Ver amigo → Publicar → Ver feed propio + de amigos → Dar me gusta → Comentar → Responder → Cerrar la app → Reabrir → Todo sigue igual.
 
 ---
 
@@ -139,6 +139,9 @@ No me quedé solo con que compilara. Probé, entre otras cosas:
 - **Persistencia:** cerrar y reabrir con un `GestorDatos` nuevo; las amistades, solicitudes y publicaciones siguen ahí.
 - **Feed:** solo publicaciones propias y de amigos, más reciente primero; editar y borrar solo las propias.
 - **Vistas:** las tres se crearon y se mostraron en una ventana de prueba con usuarios, amistades y solicitudes reales, sin errores.
+- **Muro estilo Instagram:** feed centrado de 620 px, me gusta con nombres, doble clic para dar/quitar me gusta, comentarios, respuestas de un nivel y contador de publicaciones nuevas.
+- **Persistencia de interacciones:** los me gusta se guardan en `me_gusta.csv` y los comentarios en `comentarios.csv`; al borrar una publicación o un comentario raíz se limpian también sus datos relacionados.
+- **Compatibilidad:** `comentarios.csv` ahora tiene 6 columnas (`idComentarioPadre`), pero sigue leyendo archivos viejos de 5 columnas y los migra al guardar.
 
 ---
 
@@ -200,12 +203,14 @@ Sofía tiene además una solicitud de amistad pendiente para Ana, para poder mos
 - Persistencia, repositorios CSV, publicaciones y feed — Leria.
 - `ContextoApp`, `datos_ejemplo/` y auto-seed — Leria.
 - `NavegadorEscenas`, `LoginVista`, `RegistroVista`, `PrincipalVista`, `MuroVista`, `AlertaUtil`, `Validador`, `CampoContrasena` y `estilos.css` — Boris.
+- Muro estilo Instagram con me gusta, comentarios y respuestas — integración del equipo.
+- `Comentario`, `RepositorioComentarios` y `RepositorioMeGusta` — persistencia de interacciones.
 - `.jar` generado y probado en una carpeta aparte.
+- Manual técnico (`docs/manual-tecnico.md`) y hoja de defensa (`docs/hoja-de-defensa.md`) — completados.
 
 **Pendiente del equipo:**
 
-- UML o manual técnico básico.
-- Hoja de defensa con quién hizo qué y cómo funciona cada módulo.
+- Ensayar la demostración completa y verificar que el `.jar` y los CSV estén en la carpeta de la defensa.
 
 ---
 
@@ -226,8 +231,8 @@ Sofía tiene además una solicitud de amistad pendiente para Ana, para poder mos
 | Integrante | Parte |
 |---|---|
 | **Anthony** | Autenticación, sesión, usuarios, amistades, grafo, búsqueda y vistas sociales. |
-| **Leria** | Persistencia, `GestorDatos`, repositorios CSV, lista enlazada, publicaciones, feed y datos de ejemplo. |
-| **Boris** | GUI base, `NavegadorEscenas`, login/registro, muro, validaciones visuales y estilos. |
+| **Leria** | Persistencia, `GestorDatos`, repositorios CSV, lista enlazada, publicaciones, feed, comentarios, me gusta y datos de ejemplo. |
+| **Boris** | GUI base, `NavegadorEscenas`, login/registro, muro estilo Instagram, validaciones visuales y estilos. |
 
 ---
 
