@@ -10,7 +10,7 @@ demostración y las preguntas más probables.
 | Integrante | Módulo | Archivos principales |
 |---|---|---|
 | **Anthony** | Autenticación y red social | `HashUtil`, `SesionActual`, `ServicioUsuarios`, `ServicioAutenticacion`, `ServicioAmistades`, `GrafoAmistades`, `Solicitud`, `BuscarVista`, `AmigosVista`, `SolicitudesVista` |
-| **Leria** | Persistencia y publicaciones | `GestorDatos`, `CsvUtil`, `ListaEnlazada`, `Nodo`, los cuatro `Repositorio*`, `ServicioPublicaciones`, `Publicacion`, `Usuario`, `ContextoApp`, `datos_ejemplo/` |
+| **Leria** | Persistencia y publicaciones | `GestorDatos`, `CsvUtil`, `ListaEnlazada`, `Nodo`, los seis `Repositorio*`, `ServicioPublicaciones`, `Publicacion`, `Comentario`, `Usuario`, `ContextoApp`, `datos_ejemplo/` |
 | **Boris** | Interfaz y navegación | `NavegadorEscenas`, `MainApp`, `LoginVista`, `RegistroVista`, `PrincipalVista`, `MuroVista`, `AlertaUtil`, `Validador`, `CampoContrasena`, `estilos.css` |
 
 ---

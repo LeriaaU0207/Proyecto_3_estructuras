@@ -38,7 +38,7 @@ public class BuscarVista extends BorderPane {
         this.amistades = Objects.requireNonNull(amistades);
         this.sesion = Objects.requireNonNull(sesion);
 
-        setPadding(new Insets(16));
+        setPadding(new Insets(24));
         setTop(construirEncabezado(alVolver));
         setCenter(construirContenido());
 
@@ -48,20 +48,20 @@ public class BuscarVista extends BorderPane {
 
     private HBox construirEncabezado(Runnable alVolver) {
         Label titulo = new Label("Buscar usuarios");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-        Region espacio = new Region();
-        HBox.setHgrow(espacio, Priority.ALWAYS);
+        titulo.getStyleClass().add("titulo");
 
-        HBox encabezado = new HBox(8);
+        Label subtitulo = new Label("Encontrá compañeros por nombre o usuario");
+        subtitulo.getStyleClass().add("subtitulo");
+
+        HBox encabezado = new HBox(16);
         encabezado.setAlignment(Pos.CENTER_LEFT);
-        encabezado.setPadding(new Insets(0, 0, 12, 0));
 
         if (alVolver != null) {
-            Button volver = new Button("Volver");
+            Button volver = new Button("← Volver");
             volver.setOnAction(evento -> alVolver.run());
             encabezado.getChildren().add(volver);
         }
-        encabezado.getChildren().addAll(titulo, espacio);
+        encabezado.getChildren().add(new VBox(2, titulo, subtitulo));
         return encabezado;
     }
 
@@ -76,14 +76,21 @@ public class BuscarVista extends BorderPane {
             campoBusqueda.requestFocus();
         });
 
-        HBox barra = new HBox(8, campoBusqueda, limpiar);
+        HBox barra = new HBox(10, campoBusqueda, limpiar);
         barra.setAlignment(Pos.CENTER_LEFT);
+
+        VBox buscador = new VBox(barra);
+        buscador.getStyleClass().add("panel");
+
+        resumen.getStyleClass().add("secundario");
 
         resultados.setPlaceholder(new Label("No se encontraron usuarios."));
         resultados.setCellFactory(lista -> new CeldaResultado());
         VBox.setVgrow(resultados, Priority.ALWAYS);
 
-        return new VBox(8, barra, resumen, resultados);
+        VBox contenido = new VBox(14, buscador, resumen, resultados);
+        contenido.setPadding(new Insets(18, 0, 0, 0));
+        return contenido;
     }
 
     private void buscar() {
@@ -136,31 +143,41 @@ public class BuscarVista extends BorderPane {
             }
 
             Label nombre = new Label(usuario.getNombre());
-            nombre.setStyle("-fx-font-weight: bold;");
+            nombre.getStyleClass().add("autor");
+
             Label usuarioTexto = new Label("@" + usuario.getUsuario());
+            usuarioTexto.getStyleClass().add("secundario");
+
+            HBox identidad = new HBox(6, nombre, usuarioTexto);
+            identidad.setAlignment(Pos.CENTER_LEFT);
+
+            VBox datos = new VBox(2, identidad);
+            HBox.setHgrow(datos, Priority.ALWAYS);
+
             Region espacio = new Region();
             HBox.setHgrow(espacio, Priority.ALWAYS);
 
-            HBox fila = new HBox(8, nombre, usuarioTexto, espacio);
+            HBox fila = new HBox(12, Avatar.crear(usuario.getNombre()), datos, espacio);
             fila.setAlignment(Pos.CENTER_LEFT);
-            fila.setPadding(new Insets(4));
+            fila.getStyleClass().add("fila-tarjeta");
 
             int id = idActual();
             if (amistades.sonAmigos(id, usuario.getId())) {
-                fila.getChildren().add(estado("Ya son amigos"));
+                fila.getChildren().add(estado("Ya son amigos", "estado-ok"));
             } else if (amistades.haySolicitudEntre(id, usuario.getId())) {
-                fila.getChildren().add(estado("Solicitud pendiente"));
+                fila.getChildren().add(estado("Solicitud pendiente", "estado-pendiente"));
             } else {
                 Button enviar = new Button("Enviar solicitud");
+                enviar.getStyleClass().add("primario");
                 enviar.setOnAction(evento -> enviarSolicitud(usuario));
                 fila.getChildren().add(enviar);
             }
             setGraphic(fila);
         }
 
-        private Label estado(String texto) {
+        private Label estado(String texto, String clase) {
             Label etiqueta = new Label(texto);
-            etiqueta.setStyle("-fx-text-fill: #666666;");
+            etiqueta.getStyleClass().addAll("etiqueta-estado", clase);
             return etiqueta;
         }
     }

@@ -142,6 +142,8 @@ classDiagram
 | `RepositorioAmistades` | Lee y escribe `amistades.csv`. |
 | `RepositorioSolicitudes` | Lee y escribe `solicitudes.csv`. |
 | `RepositorioPublicaciones` | Lee y escribe `publicaciones.csv`. |
+| `RepositorioComentarios` | Lee y escribe `comentarios.csv` (5 o 6 columnas; migra al guardar). |
+| `RepositorioMeGusta` | Lee y escribe `me_gusta.csv`. |
 
 ### Servicios
 
@@ -160,7 +162,7 @@ classDiagram
 | `NavegadorEscenas` | Cambia de pantalla y controla el acceso sin sesión. |
 | `LoginVista` / `RegistroVista` | Entrada y alta de usuarios. |
 | `PrincipalVista` | Menú principal con contadores. |
-| `MuroVista` | Publicar, editar, borrar y ver el feed. |
+| `MuroVista` | Publicar, editar, borrar, ver el feed, dar me gusta (botón o doble clic), comentar y responder. |
 | `BuscarVista` | Buscar usuarios y enviar solicitudes. |
 | `AmigosVista` | Ver y eliminar amigos. |
 | `SolicitudesVista` | Aceptar o rechazar solicitudes. |
@@ -199,7 +201,14 @@ usuarios.csv        id,nombre,usuario,contrasenaHash
 amistades.csv       idUsuarioA,idUsuarioB
 solicitudes.csv     idEmisor,idReceptor,fecha
 publicaciones.csv   id,idAutor,fechaHora,contenido,editada
+comentarios.csv     id,idPublicacion,idAutor,fechaHora,contenido,idComentarioPadre
+me_gusta.csv        idPublicacion,idUsuario
 ```
+
+- `comentarios.csv` con `idComentarioPadre = 0` es un comentario raíz; con un id
+  mayor que 0 es una respuesta (solo hay un nivel de respuestas).
+- Los archivos viejos de `comentarios.csv` con 5 columnas se siguen leyendo y
+  se migran a 6 columnas en el siguiente guardado.
 
 - Las fechas van en ISO-8601 (`2026-11-01T09:00`).
 - Los campos con comas, comillas o saltos de línea se escriben entre comillas.
@@ -207,7 +216,7 @@ publicaciones.csv   id,idAutor,fechaHora,contenido,editada
 - Después de cada cambio, el servicio guarda el CSV que corresponda.
 
 **Auto-seed:** al iniciar, `GestorDatos.cargarTodo()` revisa si `data/` tiene
-usuarios. Si está vacía y existe `datos_ejemplo/` al lado, copia los cuatro CSV.
+usuarios. Si está vacía y existe `datos_ejemplo/` al lado, copia los seis CSV.
 A partir de ahí, la app trabaja y guarda siempre sobre `data/`.
 
 ---

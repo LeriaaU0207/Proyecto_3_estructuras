@@ -1,5 +1,6 @@
 package com.una.socialuna.service;
 
+import com.una.socialuna.model.Comentario;
 import com.una.socialuna.model.Publicacion;
 import com.una.socialuna.util.ListaEnlazada;
 
@@ -19,6 +20,9 @@ public class ServicioPublicaciones {
 
     /** Cantidad máxima de caracteres permitidos en una publicación. */
     public static final int LONGITUD_MAXIMA = 500;
+
+    /** Cantidad máxima de caracteres permitidos en un comentario. */
+    public static final int LONGITUD_MAXIMA_COMENTARIO = 300;
 
     private final GestorDatos gestor;
 
@@ -82,6 +86,8 @@ public class ServicioPublicaciones {
         }
         gestor.getPublicaciones().eliminarSi(p -> p.getId() == idPublicacion);
         gestor.guardarPublicaciones();
+        gestor.guardarMeGusta();
+        gestor.guardarComentarios();
         return true;
     }
 
@@ -95,6 +101,8 @@ public class ServicioPublicaciones {
         int eliminadas = gestor.getPublicaciones().eliminarSi(p -> p.getIdAutor() == idUsuario);
         if (eliminadas > 0) {
             gestor.guardarPublicaciones();
+            gestor.guardarMeGusta();
+            gestor.guardarComentarios();
         }
         return eliminadas;
     }
@@ -122,6 +130,127 @@ public class ServicioPublicaciones {
     }
 
     /**
+     * Da o quita el "me gusta" de un usuario a una publicación.
+     * Recibe: el id de la publicación y el id del usuario.
+     * Retorna: true si después de la operación el usuario la tiene en "me gusta".
+     *
+     * @throws IllegalArgumentException si la publicación o el usuario no existen
+     */
+    public boolean alternarMeGusta(int idPublicacion, int idUsuario) {
+        Publicacion publicacion = buscarPorId(idPublicacion)
+                .orElseThrow(() -> new IllegalArgumentException("La publicación no existe."));
+        if (!gestor.getUsuarios().contiene(u -> u.getId() == idUsuario)) {
+            throw new IllegalArgumentException("El usuario no existe.");
+        }
+
+        boolean ahoraLeGusta;
+        if (publicacion.leGusta(idUsuario)) {
+            publicacion.getMeGusta().eliminar(Integer.valueOf(idUsuario));
+            ahoraLeGusta = false;
+        } else {
+            publicacion.getMeGusta().agregar(idUsuario);
+            ahoraLeGusta = true;
+        }
+        gestor.guardarMeGusta();
+        return ahoraLeGusta;
+    }
+
+    /**
+     * Agrega un comentario a una publicación.
+     * Recibe: el id de la publicación, el id del autor y el texto.
+     * Retorna: el comentario creado.
+     *
+     * @throws IllegalArgumentException si el texto es inválido, o la
+     *         publicación o el usuario no existen
+     */
+    public Comentario comentar(int idPublicacion, int idAutor, String contenido) {
+        return comentar(idPublicacion, idAutor, contenido, 0);
+    }
+
+    /**
+     * Agrega un comentario o una respuesta dentro de una publicación.
+     * Recibe: el id de la publicación, el id del autor, el texto y el id del
+     *         comentario al que responde (0 para un comentario raíz).
+     * Retorna: el comentario creado.
+     *
+     * Las respuestas tienen un solo nivel: si se responde a una respuesta, el
+     * comentario nuevo queda colgando del comentario raíz.
+     *
+     * @throws IllegalArgumentException si el texto es inválido, la publicación,
+     *         el usuario o el comentario respondido no existen
+     */
+    public Comentario comentar(int idPublicacion, int idAutor, String contenido,
+                               int idComentarioPadre) {
+        String texto = validarComentario(contenido);
+        Publicacion publicacion = buscarPorId(idPublicacion)
+                .orElseThrow(() -> new IllegalArgumentException("La publicación no existe."));
+        if (!gestor.getUsuarios().contiene(u -> u.getId() == idAutor)) {
+            throw new IllegalArgumentException("El usuario no existe.");
+        }
+
+        int padre = 0;
+        if (idComentarioPadre > 0) {
+            Comentario respondido = publicacion.getComentarios()
+                    .buscar(c -> c.getId() == idComentarioPadre)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "El comentario al que quieres responder no existe."));
+            padre = respondido.esRespuesta()
+                    ? respondido.getIdComentarioPadre()
+                    : respondido.getId();
+        }
+
+        Comentario comentario = new Comentario(
+                gestor.siguienteIdComentario(), idPublicacion, idAutor,
+                LocalDateTime.now(), texto, padre);
+        publicacion.getComentarios().agregar(comentario);
+        gestor.guardarComentarios();
+        return comentario;
+    }
+
+    /**
+     * Elimina un comentario propio. Si es un comentario raíz, también elimina
+     * sus respuestas (para no dejar respuestas huérfanas).
+     * Recibe: el id del comentario y el id de quien pide eliminarlo.
+     * Retorna: true si se eliminó; false si no existe o no es su autor.
+     */
+    public boolean eliminarComentario(int idComentario, int idSolicitante) {
+        for (Publicacion publicacion : gestor.getPublicaciones()) {
+            Optional<Comentario> encontrado = publicacion.getComentarios()
+                    .buscar(c -> c.getId() == idComentario);
+            if (encontrado.isPresent()) {
+                if (encontrado.get().getIdAutor() != idSolicitante) {
+                    return false;
+                }
+                publicacion.getComentarios().eliminarSi(c ->
+                        c.getId() == idComentario
+                                || c.getIdComentarioPadre() == idComentario);
+                gestor.guardarComentarios();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Recibe: el id de la publicación y el id de un comentario raíz.
+     * Retorna: las respuestas de ese comentario, en orden de llegada.
+     */
+    public ListaEnlazada<Comentario> respuestasDe(int idPublicacion, int idComentarioPadre) {
+        return comentariosDe(idPublicacion)
+                .filtrar(c -> c.getIdComentarioPadre() == idComentarioPadre);
+    }
+
+    /**
+     * Recibe: el id de la publicación.
+     * Retorna: sus comentarios en orden de llegada (lista vacía si no existe).
+     */
+    public ListaEnlazada<Comentario> comentariosDe(int idPublicacion) {
+        return buscarPorId(idPublicacion)
+                .map(Publicacion::getComentarios)
+                .orElseGet(ListaEnlazada::new);
+    }
+
+    /**
      * Recibe: el id de la publicación.
      * Retorna: un Optional con la publicación, o vacío si no existe.
      */
@@ -137,6 +266,19 @@ public class ServicioPublicaciones {
         if (texto.length() > LONGITUD_MAXIMA) {
             throw new IllegalArgumentException(
                     "La publicación no puede superar los " + LONGITUD_MAXIMA + " caracteres.");
+        }
+        return texto;
+    }
+
+    private String validarComentario(String contenido) {
+        if (contenido == null || contenido.trim().isEmpty()) {
+            throw new IllegalArgumentException("El comentario no puede estar vacío.");
+        }
+        String texto = contenido.trim();
+        if (texto.length() > LONGITUD_MAXIMA_COMENTARIO) {
+            throw new IllegalArgumentException(
+                    "El comentario no puede superar los "
+                            + LONGITUD_MAXIMA_COMENTARIO + " caracteres.");
         }
         return texto;
     }

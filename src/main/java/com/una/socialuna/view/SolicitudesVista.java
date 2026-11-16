@@ -39,7 +39,7 @@ public class SolicitudesVista extends BorderPane {
         this.amistades = Objects.requireNonNull(amistades);
         this.sesion = Objects.requireNonNull(sesion);
 
-        setPadding(new Insets(16));
+        setPadding(new Insets(24));
         setTop(construirEncabezado(alVolver));
         setCenter(construirContenido());
         refrescar();
@@ -47,20 +47,20 @@ public class SolicitudesVista extends BorderPane {
 
     private HBox construirEncabezado(Runnable alVolver) {
         Label titulo = new Label("Solicitudes de amistad");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-        Region espacio = new Region();
-        HBox.setHgrow(espacio, Priority.ALWAYS);
+        titulo.getStyleClass().add("titulo");
 
-        HBox encabezado = new HBox(8);
+        Label subtitulo = new Label("Respondé quién puede sumarse a tu red");
+        subtitulo.getStyleClass().add("subtitulo");
+
+        HBox encabezado = new HBox(16);
         encabezado.setAlignment(Pos.CENTER_LEFT);
-        encabezado.setPadding(new Insets(0, 0, 12, 0));
 
         if (alVolver != null) {
-            Button volver = new Button("Volver");
+            Button volver = new Button("← Volver");
             volver.setOnAction(evento -> alVolver.run());
             encabezado.getChildren().add(volver);
         }
-        encabezado.getChildren().addAll(titulo, espacio);
+        encabezado.getChildren().add(new VBox(2, titulo, subtitulo));
         return encabezado;
     }
 
@@ -68,7 +68,12 @@ public class SolicitudesVista extends BorderPane {
         lista.setPlaceholder(new Label("No tienes solicitudes pendientes."));
         lista.setCellFactory(vista -> new CeldaSolicitud());
         VBox.setVgrow(lista, Priority.ALWAYS);
-        return new VBox(8, resumen, lista);
+
+        resumen.getStyleClass().add("secundario");
+
+        VBox contenido = new VBox(14, resumen, lista);
+        contenido.setPadding(new Insets(18, 0, 0, 0));
+        return contenido;
     }
 
     private void refrescar() {
@@ -125,26 +130,38 @@ public class SolicitudesVista extends BorderPane {
             }
 
             Label nombre = new Label(nombreEmisor(solicitud));
-            nombre.setStyle("-fx-font-weight: bold;");
-            Label usuario = new Label(usuarioEmisor(solicitud));
-            Label fecha = new Label(solicitud.getFechaHora().format(FORMATO_FECHA));
-            fecha.setStyle("-fx-text-fill: #666666;");
+            nombre.getStyleClass().add("autor");
 
-            VBox datos = new VBox(2, nombre, usuario, fecha);
+            Label usuario = new Label(usuarioEmisor(solicitud));
+            usuario.getStyleClass().add("secundario");
+
+            Label fecha = new Label(solicitud.getFechaHora().format(FORMATO_FECHA));
+            fecha.getStyleClass().add("secundario");
+
+            HBox identidad = new HBox(6, nombre, usuario);
+            identidad.setAlignment(Pos.CENTER_LEFT);
+
+            VBox datos = new VBox(2, identidad, fecha);
+            HBox.setHgrow(datos, Priority.ALWAYS);
+
             Region espacio = new Region();
             HBox.setHgrow(espacio, Priority.ALWAYS);
 
             Button aceptar = new Button("Aceptar");
+            aceptar.getStyleClass().add("primario");
             aceptar.setOnAction(evento -> aceptar(solicitud));
+
             Button rechazar = new Button("Rechazar");
+            rechazar.getStyleClass().add("peligro");
             rechazar.setOnAction(evento -> rechazar(solicitud));
 
             HBox botones = new HBox(8, aceptar, rechazar);
             botones.setAlignment(Pos.CENTER_RIGHT);
 
-            HBox fila = new HBox(8, datos, espacio, botones);
+            HBox fila = new HBox(12,
+                    Avatar.crear(nombreEmisor(solicitud)), datos, espacio, botones);
             fila.setAlignment(Pos.CENTER_LEFT);
-            fila.setPadding(new Insets(4));
+            fila.getStyleClass().add("fila-tarjeta");
             setGraphic(fila);
         }
     }

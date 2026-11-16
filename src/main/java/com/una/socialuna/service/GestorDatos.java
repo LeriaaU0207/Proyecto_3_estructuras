@@ -1,5 +1,6 @@
 package com.una.socialuna.service;
 
+import com.una.socialuna.model.Comentario;
 import com.una.socialuna.model.GrafoAmistades;
 import com.una.socialuna.model.Publicacion;
 import com.una.socialuna.model.Solicitud;
@@ -42,6 +43,8 @@ public class GestorDatos {
     private final RepositorioAmistades repoAmistades;
     private final RepositorioSolicitudes repoSolicitudes;
     private final RepositorioPublicaciones repoPublicaciones;
+    private final RepositorioMeGusta repoMeGusta;
+    private final RepositorioComentarios repoComentarios;
 
     private ListaEnlazada<Usuario> usuarios = new ListaEnlazada<>();
     private GrafoAmistades grafo = new GrafoAmistades();
@@ -50,6 +53,7 @@ public class GestorDatos {
 
     private int proximoIdUsuario = 1;
     private int proximoIdPublicacion = 1;
+    private int proximoIdComentario = 1;
 
     /**
      * Usa la carpeta data/ ubicada en el directorio desde donde se ejecuta la
@@ -68,13 +72,15 @@ public class GestorDatos {
         this.repoAmistades = new RepositorioAmistades(carpetaDatos.resolve("amistades.csv"));
         this.repoSolicitudes = new RepositorioSolicitudes(carpetaDatos.resolve("solicitudes.csv"));
         this.repoPublicaciones = new RepositorioPublicaciones(carpetaDatos.resolve("publicaciones.csv"));
+        this.repoMeGusta = new RepositorioMeGusta(carpetaDatos.resolve("me_gusta.csv"));
+        this.repoComentarios = new RepositorioComentarios(carpetaDatos.resolve("comentarios.csv"));
     }
 
     /**
-     * Lee los cuatro CSV y reconstruye las estructuras en memoria. Si algún
+     * Lee los seis CSV y reconstruye las estructuras en memoria. Si algún
      * archivo no existe, lo crea con su encabezado. Descarta datos "huérfanos"
-     * (amistades, solicitudes o publicaciones de usuarios que ya no existen).
-     * También calcula los próximos ids (máximo + 1).
+     * (amistades, solicitudes, publicaciones, me gusta o comentarios de
+     * usuarios que ya no existen). También calcula los próximos ids (máximo + 1).
      *
      * Si data/ está vacía y existe la carpeta datos_ejemplo/ al lado, primero
      * copia los datos de ejemplo (auto-seed).
@@ -101,6 +107,9 @@ public class GestorDatos {
 
             publicaciones = repoPublicaciones.cargar();
             publicaciones.eliminarSi(p -> !existeUsuario(p.getIdAutor()));
+
+            cargarMeGusta();
+            cargarComentarios();
         } catch (IOException e) {
             throw new UncheckedIOException("No se pudieron cargar los datos: " + e.getMessage(), e);
         }
@@ -117,8 +126,50 @@ public class GestorDatos {
                 proximoIdPublicacion = p.getId() + 1;
             }
         }
+        proximoIdComentario = 1;
+        for (Publicacion p : publicaciones) {
+            for (Comentario c : p.getComentarios()) {
+                if (c.getId() >= proximoIdComentario) {
+                    proximoIdComentario = c.getId() + 1;
+                }
+            }
+        }
 
         crearArchivosFaltantes();
+    }
+
+    /**
+     * Adjunta los "me gusta" de me_gusta.csv a sus publicaciones. Se ignoran
+     * los que apuntan a publicaciones o usuarios que ya no existen.
+     */
+    private void cargarMeGusta() throws IOException {
+        for (int[] par : repoMeGusta.cargar()) {
+            int idPublicacion = par[0];
+            int idUsuario = par[1];
+            if (!existeUsuario(idUsuario)) {
+                continue;
+            }
+            publicaciones.buscar(p -> p.getId() == idPublicacion)
+                    .ifPresent(p -> {
+                        if (!p.leGusta(idUsuario)) {
+                            p.getMeGusta().agregar(idUsuario);
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Adjunta los comentarios de comentarios.csv a sus publicaciones. Se
+     * ignoran los comentarios de usuarios o publicaciones que ya no existen.
+     */
+    private void cargarComentarios() throws IOException {
+        for (Comentario comentario : repoComentarios.cargar()) {
+            if (!existeUsuario(comentario.getIdAutor())) {
+                continue;
+            }
+            publicaciones.buscar(p -> p.getId() == comentario.getIdPublicacion())
+                    .ifPresent(p -> p.getComentarios().agregar(comentario));
+        }
     }
 
     private void crearArchivosFaltantes() {
@@ -134,13 +185,20 @@ public class GestorDatos {
         if (!repoPublicaciones.existe()) {
             guardarPublicaciones();
         }
+        if (!repoMeGusta.existe()) {
+            guardarMeGusta();
+        }
+        if (!repoComentarios.existe()) {
+            guardarComentarios();
+        }
     }
 
     /**
      * Si data/ todavía no tiene usuarios y al lado existe la carpeta
-     * datos_ejemplo/, copia los cuatro CSV de ejemplo. Así una instalación
-     * nueva arranca con datos para la demostración y, a partir de ahí, la app
-     * trabaja y guarda siempre sobre data/.
+     * datos_ejemplo/, copia los CSV de ejemplo (incluidos me gusta y
+     * comentarios si están). Así una instalación nueva arranca con datos para
+     * la demostración y, a partir de ahí, la app trabaja y guarda siempre
+     * sobre data/.
      */
     private void sembrarDatosDeEjemplo() throws IOException {
         Path carpetaEjemplo = carpetaDatos.resolveSibling("datos_ejemplo");
@@ -149,7 +207,8 @@ public class GestorDatos {
         }
         Files.createDirectories(carpetaDatos);
         for (String nombre : new String[]{
-                "usuarios.csv", "amistades.csv", "solicitudes.csv", "publicaciones.csv"}) {
+                "usuarios.csv", "amistades.csv", "solicitudes.csv", "publicaciones.csv",
+                "me_gusta.csv", "comentarios.csv"}) {
             Path origen = carpetaEjemplo.resolve(nombre);
             if (Files.exists(origen)) {
                 Files.copy(origen, carpetaDatos.resolve(nombre),
@@ -203,7 +262,43 @@ public class GestorDatos {
     }
 
     /**
-     * Guarda los cuatro archivos. Se usa al cerrar la aplicación.
+     * Guarda me_gusta.csv. Llamar después de dar o quitar un "me gusta".
+     * Los pares se derivan de las publicaciones en memoria.
+     *
+     * @throws UncheckedIOException si no se puede escribir
+     */
+    public void guardarMeGusta() {
+        ejecutarGuardado("me_gusta.csv", () -> {
+            ListaEnlazada<int[]> pares = new ListaEnlazada<>();
+            for (Publicacion p : publicaciones) {
+                for (Integer idUsuario : p.getMeGusta()) {
+                    pares.agregar(new int[]{p.getId(), idUsuario});
+                }
+            }
+            repoMeGusta.guardar(pares);
+        });
+    }
+
+    /**
+     * Guarda comentarios.csv. Llamar después de comentar o borrar un
+     * comentario. Los comentarios se derivan de las publicaciones en memoria.
+     *
+     * @throws UncheckedIOException si no se puede escribir
+     */
+    public void guardarComentarios() {
+        ejecutarGuardado("comentarios.csv", () -> {
+            ListaEnlazada<Comentario> todos = new ListaEnlazada<>();
+            for (Publicacion p : publicaciones) {
+                for (Comentario c : p.getComentarios()) {
+                    todos.agregar(c);
+                }
+            }
+            repoComentarios.guardar(todos);
+        });
+    }
+
+    /**
+     * Guarda los seis archivos. Se usa al cerrar la aplicación.
      *
      * @throws UncheckedIOException si algún archivo no se puede escribir
      */
@@ -212,6 +307,8 @@ public class GestorDatos {
         guardarAmistades();
         guardarSolicitudes();
         guardarPublicaciones();
+        guardarMeGusta();
+        guardarComentarios();
     }
 
     private void ejecutarGuardado(String nombreArchivo, AccionIO accion) {
@@ -236,6 +333,13 @@ public class GestorDatos {
      */
     public int siguienteIdPublicacion() {
         return proximoIdPublicacion++;
+    }
+
+    /**
+     * Retorna: el próximo id libre para un comentario (autoincremental).
+     */
+    public int siguienteIdComentario() {
+        return proximoIdComentario++;
     }
 
     /**

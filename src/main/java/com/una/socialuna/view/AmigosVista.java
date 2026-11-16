@@ -32,7 +32,7 @@ public class AmigosVista extends BorderPane {
         this.amistades = Objects.requireNonNull(amistades);
         this.sesion = Objects.requireNonNull(sesion);
 
-        setPadding(new Insets(16));
+        setPadding(new Insets(24));
         setTop(construirEncabezado(alVolver));
         setCenter(construirContenido());
         refrescar();
@@ -40,20 +40,20 @@ public class AmigosVista extends BorderPane {
 
     private HBox construirEncabezado(Runnable alVolver) {
         Label titulo = new Label("Mis amigos");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-        Region espacio = new Region();
-        HBox.setHgrow(espacio, Priority.ALWAYS);
+        titulo.getStyleClass().add("titulo");
 
-        HBox encabezado = new HBox(8);
+        Label subtitulo = new Label("Las personas que forman tu red");
+        subtitulo.getStyleClass().add("subtitulo");
+
+        HBox encabezado = new HBox(16);
         encabezado.setAlignment(Pos.CENTER_LEFT);
-        encabezado.setPadding(new Insets(0, 0, 12, 0));
 
         if (alVolver != null) {
-            Button volver = new Button("Volver");
+            Button volver = new Button("← Volver");
             volver.setOnAction(evento -> alVolver.run());
             encabezado.getChildren().add(volver);
         }
-        encabezado.getChildren().addAll(titulo, espacio);
+        encabezado.getChildren().add(new VBox(2, titulo, subtitulo));
         return encabezado;
     }
 
@@ -61,7 +61,12 @@ public class AmigosVista extends BorderPane {
         lista.setPlaceholder(new Label("Todavía no tienes amigos."));
         lista.setCellFactory(vista -> new CeldaAmigo());
         VBox.setVgrow(lista, Priority.ALWAYS);
-        return new VBox(8, resumen, lista);
+
+        resumen.getStyleClass().add("secundario");
+
+        VBox contenido = new VBox(14, resumen, lista);
+        contenido.setPadding(new Insets(18, 0, 0, 0));
+        return contenido;
     }
 
     private void refrescar() {
@@ -105,17 +110,28 @@ public class AmigosVista extends BorderPane {
             }
 
             Label nombre = new Label(amigo.getNombre());
-            nombre.setStyle("-fx-font-weight: bold;");
+            nombre.getStyleClass().add("autor");
+
             Label usuario = new Label("@" + amigo.getUsuario());
+            usuario.getStyleClass().add("secundario");
+
+            HBox identidad = new HBox(6, nombre, usuario);
+            identidad.setAlignment(Pos.CENTER_LEFT);
+
+            VBox datos = new VBox(2, identidad);
+            HBox.setHgrow(datos, Priority.ALWAYS);
+
             Region espacio = new Region();
             HBox.setHgrow(espacio, Priority.ALWAYS);
 
             Button eliminar = new Button("Eliminar");
+            eliminar.getStyleClass().add("peligro");
             eliminar.setOnAction(evento -> eliminarAmigo(amigo));
 
-            HBox fila = new HBox(8, nombre, usuario, espacio, eliminar);
+            HBox fila = new HBox(12,
+                    Avatar.crear(amigo.getNombre()), datos, espacio, eliminar);
             fila.setAlignment(Pos.CENTER_LEFT);
-            fila.setPadding(new Insets(4));
+            fila.getStyleClass().add("fila-tarjeta");
             setGraphic(fila);
         }
     }

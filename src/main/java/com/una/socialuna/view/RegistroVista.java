@@ -3,12 +3,15 @@ package com.una.socialuna.view;
 import com.una.socialuna.service.ServicioAutenticacion;
 import com.una.socialuna.util.AlertaUtil;
 import com.una.socialuna.util.Validador;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.UncheckedIOException;
@@ -16,8 +19,19 @@ import java.io.UncheckedIOException;
 public class RegistroVista extends BorderPane {
 
     public RegistroVista(ServicioAutenticacion autenticacion, Runnable alVolver) {
+        Label logo = new Label("UNA");
+        logo.getStyleClass().add("avatar");
+        logo.setStyle("-fx-background-color: linear-gradient(to bottom right, #14b8a6, #0f9c8d);"
+                + "-fx-font-size: 16px;");
+
         Label titulo = new Label("Crear cuenta");
         titulo.getStyleClass().add("titulo");
+
+        Label subtitulo = new Label("Unite a la comunidad de Social UNA");
+        subtitulo.getStyleClass().add("subtitulo");
+
+        HBox encabezado = new HBox(14, logo, new VBox(2, titulo, subtitulo));
+        encabezado.setAlignment(Pos.CENTER_LEFT);
 
         TextField nombre = new TextField();
         nombre.setPromptText("Nombre completo");
@@ -67,19 +81,19 @@ public class RegistroVista extends BorderPane {
         repetida.alPresionarEnter(guardar);
 
         VBox formulario = new VBox(10,
-                titulo,
+                encabezado,
                 new Label("Nombre completo"), nombre,
                 new Label("Usuario"), usuario,
                 new Label("Contraseña"), clave,
                 new Label("Confirmar contraseña"), repetida,
                 registrar, volver);
 
-        formulario.getStyleClass().add("tarjeta");
-        formulario.setMaxWidth(460);
+        formulario.getStyleClass().addAll("tarjeta", "formulario");
+        formulario.setMaxWidth(480);
 
-        VBox centro = new VBox(formulario);
+        StackPane centro = new StackPane(formulario);
         centro.setAlignment(Pos.TOP_CENTER);
-        centro.setStyle("-fx-padding: 24;");
+        centro.setPadding(new Insets(32, 24, 32, 24));
 
         ScrollPane desplazamiento = new ScrollPane(centro);
         desplazamiento.setFitToWidth(true);

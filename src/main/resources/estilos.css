@@ -1,111 +1,486 @@
 .root {
-    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 14px;
-    -fx-base: #f6f8fb;
-    -fx-background: #edf3f7;
-    -fx-accent: #087f8c;
-    -fx-focus-color: #087f8c;
-    -fx-faint-focus-color: #087f8c22;
+
+    -azul-oscuro: #0b2545;
+    -azul: #13315c;
+    -azul-claro: #1b4b7a;
+    -turquesa: #14b8a6;
+    -turquesa-oscuro: #0f9c8d;
+    -fondo: #eef4f8;
+    -texto: #16283a;
+    -texto-suave: #64748b;
+    -borde: #dbe6ef;
+    -blanco: #ffffff;
+
+    -fx-base: -blanco;
+    -fx-background: -fondo;
+    -fx-accent: -turquesa;
+    -fx-focus-color: -turquesa;
+    -fx-faint-focus-color: #14b8a622;
+    -fx-background-color: linear-gradient(to bottom right, #f8fbfd, #e6f1f6);
 }
 
 .label {
-    -fx-text-fill: #1c3044;
+    -fx-text-fill: -texto;
 }
 
 .titulo {
-    -fx-font-size: 26px;
+    -fx-font-size: 27px;
     -fx-font-weight: bold;
+    -fx-text-fill: -azul-oscuro;
+}
+
+.subtitulo {
+    -fx-font-size: 14px;
+    -fx-text-fill: -texto-suave;
 }
 
 .autor {
     -fx-font-weight: bold;
+    -fx-text-fill: -azul-oscuro;
 }
 
 .secundario {
-    -fx-text-fill: #586a7d;
+    -fx-text-fill: -texto-suave;
     -fx-font-size: 12px;
 }
 
 .tarjeta {
-    -fx-background-color: white;
-    -fx-background-radius: 16;
+    -fx-background-color: -blanco;
+    -fx-background-radius: 18;
     -fx-padding: 26;
-    -fx-effect: dropshadow(gaussian, #183b5618, 18, 0, 0, 5);
+    -fx-effect: dropshadow(gaussian, #0b25451f, 26, 0.08, 0, 10);
+}
+
+.panel {
+    -fx-background-color: -blanco;
+    -fx-background-radius: 16;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, #0b254514, 18, 0.05, 0, 6);
+}
+
+.marca {
+    -fx-background-color: linear-gradient(to bottom right, #0b2545, #13315c 55%, #0f766e);
+    -fx-background-radius: 18 0 0 18;
+    -fx-padding: 42;
+}
+
+.marca .label {
+    -fx-text-fill: #d7e9f5;
+}
+
+.marca-titulo {
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.marca-texto {
+    -fx-font-size: 15px;
+    -fx-text-fill: #bcd8ea;
+}
+
+.marca-punto {
+    -fx-text-fill: #7de3d8;
+    -fx-font-size: 14px;
 }
 
 .button {
-    -fx-background-color: #e0eaf0;
-    -fx-text-fill: #18354b;
-    -fx-background-radius: 8;
-    -fx-padding: 10 16;
+    -fx-background-color: #eaf2f8;
+    -fx-text-fill: -azul;
+    -fx-background-radius: 10;
+    -fx-padding: 10 18;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #cedee8;
+    -fx-background-color: #dcebf5;
+}
+
+.button:pressed {
+    -fx-background-color: #cfe0ee;
 }
 
 .button:focused {
-    -fx-effect: dropshadow(gaussian, #087f8c66, 5, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, #14b8a655, 8, 0.2, 0, 0);
 }
 
 .button.primario {
-    -fx-background-color: #087f8c;
+    -fx-background-color: linear-gradient(to bottom right, #14b8a6, #0f9c8d);
     -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #0f9c8d55, 12, 0.15, 0, 4);
 }
 
 .button.primario:hover {
-    -fx-background-color: #066773;
+    -fx-background-color: linear-gradient(to bottom right, #12c2ae, #0d8f81);
+}
+
+.button.primario:pressed {
+    -fx-background-color: #0b8174;
 }
 
 .button.peligro {
-    -fx-background-color: #fce6e6;
-    -fx-text-fill: #a52232;
+    -fx-background-color: #fdecec;
+    -fx-text-fill: #b42334;
 }
 
 .button.peligro:hover {
-    -fx-background-color: #f6cece;
+    -fx-background-color: #f9d7d7;
 }
 
-.text-field, .text-area {
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-color: #c5d3de;
-    -fx-background-color: white;
-    -fx-text-fill: #1c3044;
-    -fx-prompt-text-fill: #617487;
-    -fx-padding: 9;
+.button.menu {
+    -fx-background-color: -blanco;
+    -fx-border-color: -borde;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 14 18;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 14px;
 }
 
-.text-field:focused, .text-area:focused {
-    -fx-border-color: #087f8c;
+.button.menu:hover {
+    -fx-background-color: #f2faf9;
+    -fx-border-color: #b7e6e0;
+}
+
+.text-field, .text-area, .password-field {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: -borde;
+    -fx-background-color: -blanco;
+    -fx-text-fill: -texto;
+    -fx-prompt-text-fill: #93a5b5;
+    -fx-padding: 10 12;
+}
+
+.text-field:focused, .text-area:focused, .password-field:focused {
+    -fx-border-color: -turquesa;
+    -fx-effect: dropshadow(gaussian, #14b8a633, 8, 0.1, 0, 0);
+}
+
+.text-area {
+    -fx-padding: 0;
 }
 
 .text-area .content {
+    -fx-background-color: -blanco;
+    -fx-background-radius: 10;
+}
+
+.check-box {
+    -fx-text-fill: -texto-suave;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: -borde;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.check-box:selected .mark {
     -fx-background-color: white;
 }
 
-.scroll-pane, .scroll-pane > .viewport {
-    -fx-background-color: transparent;
+.check-box:selected .box {
+    -fx-background-color: -turquesa;
+    -fx-border-color: -turquesa;
 }
 
 .list-view {
-    -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-padding: 6;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.list-view .virtual-flow {
+    -fx-background-color: transparent;
 }
 
 .list-cell {
-    -fx-padding: 8;
-    -fx-background-color: white;
+    -fx-background-color: transparent;
+    -fx-padding: 6 2;
 }
 
+.list-cell:filled:hover,
 .list-cell:filled:selected {
-    -fx-background-color: #e0f0f2;
+    -fx-background-color: transparent;
+}
+
+.list-view .placeholder .label {
+    -fx-text-fill: -texto-suave;
+}
+
+.fila-tarjeta {
+    -fx-background-color: -blanco;
+    -fx-background-radius: 14;
+    -fx-border-color: -borde;
+    -fx-border-radius: 14;
+    -fx-padding: 12 16;
+    -fx-effect: dropshadow(gaussian, #0b254510, 12, 0.04, 0, 3);
+}
+
+.etiqueta-estado {
+    -fx-background-radius: 999;
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.estado-ok {
+    -fx-background-color: #e6f7f4;
+    -fx-text-fill: #0f766e;
+}
+
+.estado-pendiente {
+    -fx-background-color: #fff4e5;
+    -fx-text-fill: #b45309;
+}
+
+.formulario > .label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -azul;
+    -fx-padding: 6 0 0 2;
+}
+
+.texto-publicacion {
+    -fx-font-size: 14px;
+    -fx-text-fill: -texto;
 }
 
 .publicacion {
-    -fx-padding: 12;
-    -fx-background-color: #f4f8fb;
-    -fx-background-radius: 10;
+    -fx-background-color: -blanco;
+    -fx-background-radius: 14;
+    -fx-padding: 16;
+    -fx-border-color: -borde;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, #0b254512, 14, 0.05, 0, 4);
 }
+
+.avatar {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-alignment: center;
+    -fx-min-width: 42;
+    -fx-min-height: 42;
+    -fx-pref-width: 42;
+    -fx-pref-height: 42;
+    -fx-max-width: 42;
+    -fx-max-height: 42;
+    -fx-background-radius: 999;
+}
+
+.avatar-grande {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+    -fx-alignment: center;
+    -fx-min-width: 84;
+    -fx-min-height: 84;
+    -fx-pref-width: 84;
+    -fx-pref-height: 84;
+    -fx-max-width: 84;
+    -fx-max-height: 84;
+    -fx-background-radius: 999;
+}
+
+.chip {
+    -fx-background-color: #eef7f6;
+    -fx-background-radius: 12;
+    -fx-padding: 12 18;
+}
+
+.chip .label {
+    -fx-text-fill: -texto-suave;
+}
+
+.chip-numero {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -turquesa-oscuro;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c3d6e4;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #a9c4d8;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+.separator .line {
+    -fx-border-color: -borde;
+}
+
+.tooltip {
+    -fx-background-color: -azul-oscuro;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+}
+
+/* ---------- Muro estilo Instagram ---------- */
+
+.barra-superior {
+    -fx-background-color: -blanco;
+    -fx-padding: 12 22;
+    -fx-border-color: transparent transparent #e3e9ef transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo {
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -azul-oscuro;
+}
+
+.feed-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.feed-scroll > .viewport {
+    -fx-background-color: #f7f9fb;
+}
+
+.tarjeta-post {
+    -fx-background-color: -blanco;
+    -fx-background-radius: 10;
+    -fx-border-color: #e1e7ee;
+    -fx-border-radius: 10;
+    -fx-padding: 16;
+}
+
+.boton-like {
+    -fx-background-color: transparent;
+    -fx-text-fill: -texto;
+    -fx-padding: 2 0;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.boton-like:hover {
+    -fx-text-fill: -turquesa-oscuro;
+}
+
+.boton-like.activo {
+    -fx-text-fill: #e0245e;
+}
+
+.enlace {
+    -fx-background-color: transparent;
+    -fx-text-fill: -azul;
+    -fx-padding: 4 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.enlace:hover {
+    -fx-text-fill: -turquesa-oscuro;
+}
+
+.enlace-peligro {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b42334;
+    -fx-padding: 4 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.enlace-peligro:hover {
+    -fx-text-fill: #8f1a27;
+}
+
+.boton-icono {
+    -fx-background-color: transparent;
+    -fx-text-fill: -texto-suave;
+    -fx-padding: 0 4;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.boton-icono:hover {
+    -fx-text-fill: #b42334;
+}
+
+.comentario-autor {
+    -fx-fill: -azul-oscuro;
+    -fx-font-weight: bold;
+}
+
+.comentario-texto {
+    -fx-fill: -texto;
+}
+
+.campo-comentario {
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 8 14;
+    -fx-background-color: #f4f7fa;
+    -fx-border-color: #e1e7ee;
+}
+
+/* Contador del feed y aviso de publicación nueva (barra superior) */
+.chip-contador {
+    -fx-background-color: #eef7f6;
+    -fx-text-fill: #0f766e;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-padding: 5 12;
+}
+
+.chip-nueva {
+    -fx-background-color: -turquesa;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-padding: 3 8;
+}
+
+/* Respuestas a comentarios */
+.comentario-respuesta {
+    -fx-padding: 0 0 0 34;
+}
+
+.enlace-responder {
+    -fx-background-color: transparent;
+    -fx-text-fill: -texto-suave;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 4;
+    -fx-cursor: hand;
+}
+
+.enlace-responder:hover {
+    -fx-text-fill: -turquesa-oscuro;
+}
+
