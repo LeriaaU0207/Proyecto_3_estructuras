@@ -1,0 +1,9 @@
+id,idPublicacion,idAutor,fechaHora,contenido,idComentarioPadre
+1,1,2,2026-11-01T09:15,¡Buen inicio de proyecto!,0
+2,1,3,2026-11-01T09:20,Vamos con todo.,0
+3,2,1,2026-11-01T09:40,"Sí, ya la revisé anoche.",0
+4,5,3,2026-11-01T12:30,Yo también ayudo con el muro.,0
+5,7,2,2026-11-01T19:00,Nos vemos allá.,0
+6,1,1,2026-11-01T09:22,¡Gracias! Vamos con todo.,1
+7,7,4,2026-11-16T15:35:59.735469600,Nos vemos!,0
+8,9,4,2026-11-16T15:39:48.833191,Wenasssss,0
